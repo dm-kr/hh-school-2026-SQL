@@ -7,6 +7,11 @@ DROP TABLE IF EXISTS areas;
 DROP TABLE IF EXISTS specializations;
 
 
+-- Таблицы содержат минимально необходимые поля для выполнения дз с небольшими дополнениями
+-- Не уверен в совпадении типов первичных ключей с таблицами оригинальной базы, но надеюсь в
+-- рамках дз это не сильно критично
+
+
 CREATE TABLE users (
   id UUID PRIMARY KEY,
   name VARCHAR(255) NOT NULL
@@ -40,6 +45,7 @@ CREATE TABLE resumes (
     CHECK (compensation_from IS NOT NULL OR compensation_to IS NOT NULL)
 );
 
+
 CREATE TABLE vacancies (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -49,6 +55,8 @@ CREATE TABLE vacancies (
   compensation_from INTEGER,
   compensation_to INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
+  -- В последний момент понял, что вакансия может быть в целом без указания зп, в таком случае нужно
+  -- убрать ограничение и не учитывать такие вакансии при подсчете статистики
   CONSTRAINT at_least_one_compensation_present
     CHECK (compensation_from IS NOT NULL OR compensation_to IS NOT NULL)
 );
